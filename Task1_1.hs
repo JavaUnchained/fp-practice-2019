@@ -48,7 +48,7 @@ evaluate expression = case expression of
           (Plus, IntConstant 0, r)             -> r
           (Plus, l, IntConstant 0)             -> l
           (Diff, IntConstant l, IntConstant r) -> IntConstant $ l - r
-          (Diff, lhv, IntConstant 0)           -> l
+          (Diff, l, IntConstant 0)           -> l
           (Mult, IntConstant l, IntConstant r) -> IntConstant $ l * r 
           (Mult, IntConstant 1, r)             -> r
           (Mult, IntConstant 0, r)             -> IntConstant 0
