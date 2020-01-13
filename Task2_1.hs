@@ -10,11 +10,13 @@ import Todo(todo)
 
 -- Ассоциативный массив на основе бинарного дерева поиска
 -- Ключи - Integer, значения - произвольного типа
-data TreeMap v = ChangeMe
+data TreeMap v = Node Integer v (TreeMap v) (TreeMap v)
+                | Leaf
+    deriving(Show)
 
 -- Пустое дерево
 emptyTree :: TreeMap v
-emptyTree = todo
+emptyTree = Leaf
 
 -- Содержится ли заданный ключ в дереве?
 contains :: TreeMap v -> Integer -> Bool
