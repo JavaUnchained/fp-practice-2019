@@ -42,11 +42,21 @@ product = foldr (*) 1
 
 -- Выделение из списка Maybe всех существующих значений
 catMaybes :: [Maybe a] -> [a]
-catMaybes = todo
+catMaybes l = foldr (\x xs -> case x of 
+                                      Just x  -> x:xs 
+                                      Nothing -> xs) [] l
 
 -- Диагональ матрицы
 diagonal :: [[a]] -> [a]
-diagonal = todo
+diagonal ls = if isMatrix ls ls == True then diagonal' ls else error "This is not a matrix"
+
+isMatrix :: [[a]] -> [[a]] -> Bool
+isMatrix [] _     = False
+isMatrix _ []     = True
+isMatrix m (l:ls) = if length l == length m then isMatrix m ls  else False
+
+diagonal' :: [[a]] -> [a]
+diagonal' ls = snd $ foldr (\x (f, s) -> (f - 1, x !! f : s)) (length ls - 1, []) ls
 
 -- Фильтр для всех элементов, не соответствующих предикату
 filterNot :: (a -> Bool) -> [a] -> [a]
@@ -54,11 +64,11 @@ filterNot pr = foldr (\x  l -> if pr x then x : l else  l) []
 
 -- Поиск элемента в списке
 elem :: (Eq a) => a -> [a] -> Bool
-elem e = todo
+elem e = foldr (\c cs -> if e == c then True else cs) False
 
 -- Список чисел в диапазоне [from, to) с шагом step
 rangeTo :: Integer -> Integer -> Integer -> [Integer]
-rangeTo from to step = todo
+rangeTo from to step = unfoldr (\l -> if l > to then Nothing else Just(l, l + step)) from 
 
 -- Конкатенация двух списков
 append :: [a] -> [a] -> [a]
@@ -67,4 +77,4 @@ append a b = foldr (\x s -> x:s ) b a
 -- Разбиение списка lst на куски размером n
 -- (последний кусок может быть меньше)
 groups :: [a] -> Integer -> [[a]]
-groups lst n = todo
+groups ls n = unfoldr (\x ->  if null x then Nothing else Just((take $ fi) x, (drop $ fi) x)) ls where fi = fromIntegral n
