@@ -7,12 +7,17 @@ module Task2_1 where
 -}
 
 import Todo(todo)
+import Prelude hiding (lookup)
 
 -- Ассоциативный массив на основе бинарного дерева поиска
 -- Ключи - Integer, значения - произвольного типа
-data TreeMap v = Node Integer v (TreeMap v) (TreeMap v)
+data TreeMap v = Node (Integer ,v) (TreeMap v) (TreeMap v)
                 | Leaf
-    deriving(Show)
+    deriving(Show, Eq)
+
+
+treeForTesting = (Node (100,"100")(Node (50,"50")(Leaf)(Leaf))(Node (150,"150")(Node (125,"125")(Leaf)(Leaf))(Node (175,"175")(Leaf)(Leaf))))
+
 
 -- Пустое дерево
 emptyTree :: TreeMap v
@@ -20,11 +25,15 @@ emptyTree = Leaf
 
 -- Содержится ли заданный ключ в дереве?
 contains :: TreeMap v -> Integer -> Bool
-contains t k = todo
+contains t k = 
 
 -- Значение для заданного ключа
 lookup :: Integer -> TreeMap v -> v
-lookup k t = todo
+lookup _ Leaf  = error "There is no such key, or this empty tree"
+lookup k (Node (k',v) l r) | k == k'   = v
+                           | k > k'    = lookup k r
+                           | k < k'    = lookup k l 
+       
 
 -- Вставка пары (ключ, значение) в дерево
 insert :: (Integer, v) -> TreeMap v -> TreeMap v
