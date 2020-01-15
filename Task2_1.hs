@@ -25,7 +25,10 @@ emptyTree = Leaf
 
 -- Содержится ли заданный ключ в дереве?
 contains :: TreeMap v -> Integer -> Bool
-contains t k = 
+contains Leaf _ = False
+contains (Node (k',v) l r) k | k == k' = True
+                             | k >  k' = contains r k
+                             | k <  k' = contains l k  
 
 -- Значение для заданного ключа
 lookup :: Integer -> TreeMap v -> v
