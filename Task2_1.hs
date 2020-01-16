@@ -79,8 +79,6 @@ listFromTree Leaf               = []
 listFromTree (Node p@(k,v) l r) = listFromTree l ++ [p] ++ listFromTree r
 
 -- Поиск k-той порядковой статистики дерева
---Определение: k-ой порядковой статистикой набора элементов линейно упорядоченного множества
---называется такой его элемент, который является k-ым элементом набора в порядке сортировки
 kMean :: Integer -> TreeMap v -> (Integer, v)
 kMean _ Leaf = error"kMean is not define, because tree is empty"
 kMean i (Node p@(k,v) l r) | size l == i = p
