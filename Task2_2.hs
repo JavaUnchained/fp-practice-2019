@@ -17,7 +17,7 @@ foldl f i (l:ls) = foldl f (f i l) ls
 
 foldr :: (a -> b -> b) -> b -> [a] -> b
 foldr f i []       = i
-foldr f i (r : rs) = f r (foldr f i rs)
+foldr f i (r : rs) = f r $ foldr f i rs
 
 unfoldr :: (b -> Maybe (a, b)) -> b -> [a]
 unfoldr f i = unf (f i) where
@@ -48,15 +48,14 @@ catMaybes l = foldr (\x xs -> case x of
 
 -- Диагональ матрицы
 diagonal :: [[a]] -> [a]
-diagonal ls = if isMatrix ls ls == True then diagonal' ls else error "This is not a matrix"
-
-isMatrix :: [[a]] -> [[a]] -> Bool
-isMatrix [] _     = False
-isMatrix _ []     = True
-isMatrix m (l:ls) = if length l == length m then isMatrix m ls  else False
-
-diagonal' :: [[a]] -> [a]
-diagonal' ls = snd $ foldr (\x (f, s) -> (f - 1, x !! f : s)) (length ls - 1, []) ls
+diagonal ls = if isMatrix ls ls == True 
+                          then diagonal' ls 
+                          else error "This is not a matrix"
+                            where
+                              isMatrix [] _     = False
+                              isMatrix _ []     = True
+                              isMatrix m (l:ls) = if length l == length m then isMatrix m ls else False
+                              diagonal' ls = snd $ foldr (\x (f, s) -> (f - 1, x !! f : s)) (length ls - 1, []) ls
 
 -- Фильтр для всех элементов, не соответствующих предикату
 filterNot :: (a -> Bool) -> [a] -> [a]
