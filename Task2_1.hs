@@ -65,8 +65,8 @@ nearestLE i (Node p@(k,v) l r) | i == k = p
                                | i >  k = underNodes i p r
                                   where
                                       underNodes _ pair Leaf = pair
-                                      underNodes i pair nod@(Node (k,v) l r) | i < k     = pair
-                                                                             | otherwise = nearestLE i r
+                                      underNodes i pair node@(Node (k,v) l r) | i < k     = pair
+                                                                              | otherwise = nearestLE i node
 
 -- Построение дерева из списка пар
 treeFromList :: [(Integer, v)] -> TreeMap v
@@ -82,4 +82,10 @@ listFromTree (Node p@(k,v) l r) = listFromTree l ++ [p] ++ listFromTree r
 --Определение: k-ой порядковой статистикой набора элементов линейно упорядоченного множества
 --называется такой его элемент, который является k-ым элементом набора в порядке сортировки
 kMean :: Integer -> TreeMap v -> (Integer, v)
-kMean i t = todo
+kMean _ Leaf = error"kMean is not define, because tree is empty"
+kMean i (Node p@(k,v) l r) | size l == i = p
+                           | size l >  i = kMean i l
+                           | otherwise   = kMean (i - (size l) - 1) r
+                              where
+                                size Leaf             = 0
+                                size (Node (k,v) l r) = 1 + size l + size r
