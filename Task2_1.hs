@@ -15,10 +15,6 @@ data TreeMap v = Node (Integer ,v) (TreeMap v) (TreeMap v)
                 | Leaf
     deriving(Show, Eq)
 
-
-treeForTesting = (Node (100,"100")(Node (50,"50")(Leaf)(Leaf))(Node (150,"150")(Node (125,"125")(Leaf)(Leaf))(Node (175,"175")(Leaf)(Leaf))))
-
-
 -- Пустое дерево
 emptyTree :: TreeMap v
 emptyTree = Leaf
@@ -63,7 +59,14 @@ remove i (Node p@(k,v) l r)  | i >  k = Node p l (remove i r)
 
 -- Поиск ближайшего снизу ключа относительно заданного
 nearestLE :: Integer -> TreeMap v -> (Integer, v)
-nearestLE i t = todo
+nearestLE _ Leaf = error "There is no such key"
+nearestLE i (Node p@(k,v) l r) | i == k = p
+                               | i <  k = nearestLE i l
+                               | i >  k = underNodes i p r
+                                  where
+                                      underNodes _ pair Leaf = pair
+                                      underNodes i pair nod@(Node (k,v) l r) | i < k     = pair
+                                                                             | otherwise = nearestLE i r
 
 -- Построение дерева из списка пар
 treeFromList :: [(Integer, v)] -> TreeMap v
@@ -72,8 +75,11 @@ treeFromList lst = foldr insert Leaf lst
 
 -- Построение списка пар из дерева
 listFromTree :: TreeMap v -> [(Integer, v)]
-listFromTree t = todo
+listFromTree Leaf               = []
+listFromTree (Node p@(k,v) l r) = listFromTree l ++ [p] ++ listFromTree r
 
 -- Поиск k-той порядковой статистики дерева
+--Определение: k-ой порядковой статистикой набора элементов линейно упорядоченного множества
+--называется такой его элемент, который является k-ым элементом набора в порядке сортировки
 kMean :: Integer -> TreeMap v -> (Integer, v)
 kMean i t = todo
