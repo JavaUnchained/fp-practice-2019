@@ -40,11 +40,26 @@ lookup k (Node (k',v) l r) | k == k'   = v
 
 -- Вставка пары (ключ, значение) в дерево
 insert :: (Integer, v) -> TreeMap v -> TreeMap v
-insert (k, v) t = todo
+insert (k, v) Leaf = Node (k, v) Leaf Leaf
+insert pair@(k, v) (Node kv@(k',v') l r) | k == k' = Node pair l r
+                                         | k >  k' = Node kv l (insert pair r)
+                                         | k <  k' = Node kv (insert pair l) r
 
 -- Удаление элемента по ключу
 remove :: Integer -> TreeMap v -> TreeMap v
-remove i t = todo
+remove _ Leaf= Leaf
+remove i (Node p@(k,v) l r)  | i >  k = Node p l (remove i r)
+                             | i <  k = Node p (remove i l) r
+                             | i == k = checkRight l r
+                                where
+                                  checkRight l Leaf = l
+                                  checkRight l r    = Node (k',v') l r'
+                                  ((k', v'), r') = mostMinRight r
+                                  mostMinRight (Node (k,v) Leaf r) = ((k, v), r)
+                                  mostMinRight (Node (k,v) l    r) = (pair, (Node (k,v) lm r))
+                                    where (pair, lm) = mostMinRight l
+
+                                    
 
 -- Поиск ближайшего снизу ключа относительно заданного
 nearestLE :: Integer -> TreeMap v -> (Integer, v)
@@ -52,7 +67,8 @@ nearestLE i t = todo
 
 -- Построение дерева из списка пар
 treeFromList :: [(Integer, v)] -> TreeMap v
-treeFromList lst = todo
+treeFromList []  = Leaf
+treeFromList lst = foldr insert Leaf lst
 
 -- Построение списка пар из дерева
 listFromTree :: TreeMap v -> [(Integer, v)]
