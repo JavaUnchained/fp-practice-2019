@@ -10,6 +10,9 @@ data Zipper a = Zipper [a] [a]
 instance (Show a) => Show (Zipper a) where
     show (Zipper l r) = (show $ reverse l) ++ (show r)
 
+instance (Eq a) => Eq (Zipper a) where
+    (==) a a' = innerCon a == innerCon a' 
+
 fromList :: [a] -> Zipper a
 fromList lst = Zipper [] lst
 
